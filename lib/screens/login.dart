@@ -2,8 +2,62 @@ import 'package:flutter/material.dart';
 import 'package:papa_capim/routes.dart';
 import 'package:papa_capim/theme.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  bool _isValidEmail(String value) {
+    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+    return emailRegex.hasMatch(value);
+  }
+
+  void _validateAndLogin() {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, preencha todos os campos'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (!_isValidEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, informe um e-mail válido'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    Navigator.pushReplacementNamed(context, AppRoutes.feed);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,21 +96,22 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   const Text('Email'),
                   const SizedBox(height: 6),
-                  const TextField(
+                  TextField(
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(hintText: 'seu@email.com'),
+                    decoration: const InputDecoration(hintText: 'seu@email.com'),
                   ),
                   const SizedBox(height: 12),
                   const Text('Senha'),
                   const SizedBox(height: 6),
-                  const TextField(
+                  TextField(
+                    controller: _passwordController,
                     obscureText: true,
-                    decoration: InputDecoration(hintText: '********'),
+                    decoration: const InputDecoration(hintText: '********'),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () =>
-                        Navigator.pushReplacementNamed(context, AppRoutes.feed),
+                    onPressed: _validateAndLogin,
                     child: const Text('Entrar'),
                   ),
                   const SizedBox(height: 16),
