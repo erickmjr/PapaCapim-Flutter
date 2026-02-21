@@ -47,7 +47,7 @@ const List<Post> POSTS = [
     userId: '2',
     content:
         'Hoje consegui fotografar um papacapim no alto de uma arvore.',
-    timestamp: 'ha 2 horas',
+    timestamp: 'há 2 horas',
     likes: 45,
     replies: 3,
     isLiked: true,
@@ -57,7 +57,7 @@ const List<Post> POSTS = [
     userId: '1',
     content:
         'Bom dia! Alguem sabe identificar esse canto? Ouvi no jardim.',
-    timestamp: 'ha 4 horas',
+    timestamp: 'há 4 horas',
     likes: 12,
     replies: 8,
     isLiked: false,
@@ -67,7 +67,7 @@ const List<Post> POSTS = [
     userId: currentUserId,
     content:
         'Primeiro post no Papacapim! Ansioso para conhecer pessoas.',
-    timestamp: 'ha 6 horas',
+    timestamp: 'há 6 horas',
     likes: 4,
     replies: 1,
     isLiked: false,

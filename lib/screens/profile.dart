@@ -25,7 +25,8 @@ class UserProfileScreen extends StatelessWidget {
       extendBody: true,
       appBar: AppBar(
         title: const Text('Perfil'),
-        backgroundColor: AppColors.cream,
+        backgroundColor: AppColors.forest,
+        foregroundColor: AppColors.cream,
         elevation: 0,
       ),
       body: ListView(
@@ -65,13 +66,13 @@ class UserProfileScreen extends StatelessWidget {
           const Divider(),
           const SizedBox(height: 8),
           const Text(
-            'Publicacoes',
+            'Publicações',
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           if (userPosts.isEmpty)
             Text(
-              'Nenhuma publicacao ainda.',
+              'Nenhuma publicação ainda.',
               style: TextStyle(color: AppColors.moss.withOpacity(0.7)),
             )
           else

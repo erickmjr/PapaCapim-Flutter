@@ -42,7 +42,7 @@ class _FeedScreenState extends State<FeedScreen> {
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         leading: const Icon(Icons.eco_rounded, color: AppColors.forest),
-        backgroundColor: AppColors.cream,
+        backgroundColor: AppColors.forest,
         elevation: 0,
       ),
       body: ListView.builder(
@@ -53,7 +53,7 @@ class _FeedScreenState extends State<FeedScreen> {
             return Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 120),
               child: Text(
-                'Isso e tudo por enquanto',
+                'Isso é tudo por enquanto',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: AppColors.moss.withOpacity(0.6)),
               ),

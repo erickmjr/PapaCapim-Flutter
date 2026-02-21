@@ -45,10 +45,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Editar perfil'),
-        backgroundColor: AppColors.cream,
+        backgroundColor: AppColors.forest,
+        foregroundColor: AppColors.cream,
         elevation: 0,
         actions: [
-          TextButton(onPressed: _save, child: const Text('Salvar')),
+          TextButton(
+            onPressed: _save,
+            style: TextButton.styleFrom(foregroundColor: AppColors.cream),
+            child: const Text('Salvar'),
+          ),
         ],
       ),
       body: ListView(
@@ -58,7 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           const SizedBox(height: 16),
           _Field(label: 'Bio', controller: _bioController, maxLines: 4),
           const SizedBox(height: 16),
-          _Field(label: 'Localizacao', controller: _locationController),
+          _Field(label: 'Localização', controller: _locationController),
         ],
       ),
     );

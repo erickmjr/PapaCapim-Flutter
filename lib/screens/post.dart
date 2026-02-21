@@ -31,11 +31,12 @@ class _NewPostScreenState extends State<NewPostScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nova postagem'),
-        backgroundColor: AppColors.cream,
+        backgroundColor: AppColors.forest,
         elevation: 0,
         actions: [
           TextButton(
             onPressed: _publish,
+            style: TextButton.styleFrom(foregroundColor: AppColors.cream),
             child: const Text('Publicar'),
           ),
         ],
