@@ -10,44 +10,55 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  late final TextEditingController _userController;
-  late final TextEditingController _nameController;
   late final TextEditingController _emailController;
+  late final TextEditingController _nameController;
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
-  late final TextEditingController _bioController;
 
   @override
   void initState() {
     super.initState();
-    _userController = TextEditingController();
-    _nameController = TextEditingController();
     _emailController = TextEditingController();
+    _nameController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
-    _bioController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _userController.dispose();
-    _nameController.dispose();
     _emailController.dispose();
+    _nameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _bioController.dispose();
     super.dispose();
   }
 
+  bool _isValidEmail(String value) {
+    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+    return emailRegex.hasMatch(value);
+  }
+
   void _validateAndCreateAccount() {
-    if (_userController.text.isEmpty ||
+    final email = _emailController.text.trim();
+    
+    if (email.isEmpty ||
         _nameController.text.isEmpty ||
         _passwordController.text.isEmpty ||
         _confirmPasswordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Por favor, preencha todos os campos'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.danger
+        ),
+      );
+      return;
+    }
+
+    if (!_isValidEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, informe um e-mail válido'),
+          backgroundColor:  AppColors.danger,
         ),
       );
       return;
@@ -57,13 +68,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('As senhas não coincidem'),
-          backgroundColor: Colors.red,
+          backgroundColor:  AppColors.danger,
         ),
       );
       return;
     }
 
-    Navigator.pushReplacementNamed(context, AppRoutes.feed);
+    Navigator.pushReplacementNamed(context, AppRoutes.login);
   }
 
   @override
@@ -102,9 +113,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 20),
                   _Field(
-                    controller: _userController,
-                    label: 'Usuario:',
-                    hint: 'joaosilva',
+                    controller: _emailController,
+                    label: 'Email:',
+                    hint: 'seu@email.com',
+                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 12),
                   _Field(
@@ -112,7 +124,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     label: 'Nome completo:',
                     hint: 'Joao da Silva',
                   ),
-                 
                   const SizedBox(height: 12),
                   _Field(
                     controller: _passwordController,
