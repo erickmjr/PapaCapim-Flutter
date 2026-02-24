@@ -58,7 +58,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                 maxLength: _maxChars,
                 maxLines: null,
                 decoration: const InputDecoration(
-                  hintText: 'O que esta acontecendo?',
+                  hintText: 'O que está acontecendo?',
                   border: InputBorder.none,
                 ),
               ),

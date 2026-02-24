@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:papa_capim/models/post.dart';
 import 'package:papa_capim/models/user.dart';
 import 'package:papa_capim/theme.dart';
@@ -46,7 +45,7 @@ const List<Post> POSTS = [
     id: '101',
     userId: '2',
     content:
-        'Hoje consegui fotografar um papacapim no alto de uma arvore.',
+        'Ah papacapim dos meus sonhos.',
     timestamp: 'há 2 horas',
     likes: 45,
     replies: 3,
@@ -56,7 +55,7 @@ const List<Post> POSTS = [
     id: '102',
     userId: '1',
     content:
-        'Bom dia! Alguem sabe identificar esse canto? Ouvi no jardim.',
+        'Bom dia! Alguem sabe identificar esse canto? tzi-tzi-tzi-tzi',
     timestamp: 'há 4 horas',
     likes: 12,
     replies: 8,
@@ -66,7 +65,7 @@ const List<Post> POSTS = [
     id: '103',
     userId: currentUserId,
     content:
-        'Primeiro post no Papacapim! Ansioso para conhecer pessoas.',
+        'Primeiro post no Papacapim!',
     timestamp: 'há 6 horas',
     likes: 4,
     replies: 1,
