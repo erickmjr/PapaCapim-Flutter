@@ -48,7 +48,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Por favor, preencha todos os campos'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.danger
         ),
       );
       return;
@@ -58,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Por favor, informe um e-mail válido'),
-          backgroundColor: Colors.red,
+          backgroundColor:  AppColors.danger,
         ),
       );
       return;
@@ -68,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('As senhas não coincidem'),
-          backgroundColor: Colors.red,
+          backgroundColor:  AppColors.danger,
         ),
       );
       return;
