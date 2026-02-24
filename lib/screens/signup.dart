@@ -14,7 +14,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late final TextEditingController _nameController;
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
-  late final TextEditingController _bioController;
 
   @override
   void initState() {
@@ -23,7 +22,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _nameController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
-    _bioController = TextEditingController();
   }
 
   @override
@@ -32,7 +30,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _nameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _bioController.dispose();
     super.dispose();
   }
 
