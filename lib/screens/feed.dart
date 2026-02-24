@@ -41,7 +41,7 @@ class _FeedScreenState extends State<FeedScreen> {
           'Papacapim',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
-        leading: const Icon(Icons.eco_rounded, color: AppColors.forest),
+        leading: const Icon(Icons.eco_rounded, color: AppColors.cream),
         backgroundColor: AppColors.forest,
         elevation: 0,
       ),
