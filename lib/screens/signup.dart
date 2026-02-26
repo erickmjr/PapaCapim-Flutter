@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:papa_capim/routes.dart';
 import 'package:papa_capim/theme.dart';
+import '../services/api_services.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -38,17 +39,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return emailRegex.hasMatch(value);
   }
 
-  void _validateAndCreateAccount() {
+  void _validateAndCreateAccount() async {
     final email = _emailController.text.trim();
-    
+    final name = _nameController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
     if (email.isEmpty ||
-        _nameController.text.isEmpty ||
-        _passwordController.text.isEmpty ||
-        _confirmPasswordController.text.isEmpty) {
+        name.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Por favor, preencha todos os campos'),
-          backgroundColor: AppColors.danger
+          backgroundColor: AppColors.danger,
         ),
       );
       return;
@@ -58,23 +62,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Por favor, informe um e-mail válido'),
-          backgroundColor:  AppColors.danger,
+          backgroundColor: AppColors.danger,
         ),
       );
       return;
     }
 
-    if (_passwordController.text != _confirmPasswordController.text) {
+    if (password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('As senhas não coincidem'),
-          backgroundColor:  AppColors.danger,
+          backgroundColor: AppColors.danger,
         ),
       );
       return;
     }
 
-    Navigator.pushReplacementNamed(context, AppRoutes.login);
+    try {
+      final response = await ApiService.post(
+        "/users",
+        body: {
+          "user": email, //tenho que conferir a estrutura do body que a API pede, mas acho que é isso
+          "name": name,
+          "password": password,
+          "confirmPassword": confirmPassword,
+        },
+      );
+
+      if (!mounted) return; // verificar se o widget ainda está montado antes de usar o contexto
+
+      if (response.statusCode == 201) {
+        Navigator.pushReplacementNamed(context, AppRoutes.login);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Erro ao criar conta'),
+            backgroundColor: AppColors.danger,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Erro de conexão'),
+          backgroundColor: AppColors.danger,
+        ),
+      );
+    }
   }
 
   @override
