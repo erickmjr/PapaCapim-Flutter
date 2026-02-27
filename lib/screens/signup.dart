@@ -82,10 +82,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       final response = await ApiService.post(
         "/users",
         body: {
-          "user": email, //tenho que conferir a estrutura do body que a API pede, mas acho que é isso
-          "name": name,
-          "password": password,
-          "confirmPassword": confirmPassword,
+          "user": {
+            "login": email,
+            "name": name,
+            "password": password,
+            "password_confirmation": confirmPassword
+          }
         },
       );
 
