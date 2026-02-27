@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:papa_capim/routes.dart';
 import 'package:papa_capim/theme.dart';
+import '../services/api_services.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return emailRegex.hasMatch(value);
   }
 
-  void _validateAndLogin() {
+  Future<void> _validateAndLogin() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
@@ -56,7 +57,36 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    Navigator.pushReplacementNamed(context, AppRoutes.feed);
+    try {
+      final response = await ApiService.post(
+        "/sessions",
+        body: {
+          "login": email,
+          "password": password,
+        },
+      );
+
+      if (!mounted) return; 
+      if (response.statusCode == 200) {
+        Navigator.pushReplacementNamed(context, AppRoutes.feed);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Verifique suas credenciais e tente novamente'),
+            backgroundColor: AppColors.danger,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Erro de conexão'),
+          backgroundColor: AppColors.danger,
+        ),
+      );
+    }
   }
 
   @override
