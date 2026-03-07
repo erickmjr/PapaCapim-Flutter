@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:papa_capim/routes.dart';
+import 'package:papa_capim/services/secure_storage_service.dart';
 import 'package:papa_capim/theme.dart';
 import '../services/api_services.dart';
 
@@ -68,6 +71,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!mounted) return; 
       if (response.statusCode == 200) {
+        
+        final token = jsonDecode(response.body)["token"];
+
+        await SecureStorageService.saveToken(token);
+
+        if (!mounted) return;
         Navigator.pushReplacementNamed(context, AppRoutes.feed);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
