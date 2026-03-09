@@ -91,7 +91,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         },
       );
 
-      if (!mounted) return; // verificar se o widget ainda está montado antes de usar o contexto
+      if (!mounted) return; 
 
       if (response.statusCode == 201) {
         Navigator.pushReplacementNamed(context, AppRoutes.login);
