@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:papa_capim/models/user_model.dart';
+import 'package:papa_capim/providers/user_provider.dart';
 import 'package:papa_capim/routes.dart';
 import 'package:papa_capim/services/secure_token.dart';
 import 'package:papa_capim/theme.dart';
+import 'package:provider/provider.dart' show ReadContext;
 import '../services/api_services.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -72,11 +75,15 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return; 
       if (response.statusCode == 200) {
 
-        final token = jsonDecode(response.body)["token"];
+        final data = jsonDecode(response.body);
 
-        await SecureStorageService.saveToken(token);
+        final user = UserModel.fromJson(data);
+
+        await SecureStorageService.saveToken(user.token);
+
+        if (!mounted) return;
+        context.read<UserProvider>().setUser(user);
         
-        if (!mounted) return; 
         Navigator.pushReplacementNamed(context, AppRoutes.feed);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

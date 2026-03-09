@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:papa_capim/data/mock_data.dart';
-import 'package:papa_capim/models/user.dart';
 import 'package:papa_capim/routes.dart';
 import 'package:papa_capim/theme.dart';
 import 'package:papa_capim/widgets/bottom_tab_bar.dart';
 import 'package:papa_capim/widgets/post_card.dart';
 import 'package:papa_capim/widgets/user_avatar.dart';
 
-class UserProfileScreen extends StatelessWidget {
-  const UserProfileScreen({super.key, this.username});
+import 'package:papa_capim/providers/user_provider.dart';
 
-  final String? username;
+class UserProfileScreen extends StatelessWidget {
+  const UserProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = USERS.values.firstWhere(
-      (u) => u.username == (username ?? USERS[currentUserId]!.username),
-      orElse: () => USERS[currentUserId]!,
-    );
-    final isOwnProfile = user.id == currentUserId;
-    final userPosts = POSTS.where((post) => post.userId == user.id).toList();
+    final user = context.watch<UserProvider>().user;
+
+    if (user == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final userPosts = POSTS.where((post) => post.userId == user.userId).toList();
 
     return Scaffold(
       extendBody: true,
@@ -36,40 +40,33 @@ class UserProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               UserAvatar(
-                name: user.name,
-                color: user.avatarColor,
+                name: user.userLogin,
+                color: Colors.green,
                 size: AvatarSize.lg,
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _ProfileHeader(user: user),
+                child: _ProfileHeader(userLogin: user.userLogin),
               ),
-              if (isOwnProfile)
-                IconButton(
-                  onPressed: () =>
-                      Navigator.pushNamed(context, AppRoutes.profileEdit),
-                  icon: const Icon(Icons.edit_outlined),
-                ),
+              IconButton(
+                onPressed: () =>
+                    Navigator.pushNamed(context, AppRoutes.profileEdit),
+                icon: const Icon(Icons.edit_outlined),
+              ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(user.bio, style: const TextStyle(height: 1.4)),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              _StatBlock(label: 'Seguindo', value: user.following),
-              const SizedBox(width: 16),
-              _StatBlock(label: 'Seguidores', value: user.followers),
-            ],
-          ),
+
           const SizedBox(height: 16),
           const Divider(),
           const SizedBox(height: 8),
+
           const Text(
             'Publicações',
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
+
           const SizedBox(height: 12),
+
           if (userPosts.isEmpty)
             Text(
               'Nenhuma publicação ainda.',
@@ -77,13 +74,13 @@ class UserProfileScreen extends StatelessWidget {
             )
           else
             ...userPosts.map((post) {
-              final postUser = USERS[post.userId] ?? user;
               return PostCard(
                 post: post,
-                user: postUser,
-                isOwner: isOwnProfile,
+                user: USERS[post.userId]!,
+                isOwner: true,
               );
             }),
+
           const SizedBox(height: 120),
         ],
       ),
@@ -93,9 +90,9 @@ class UserProfileScreen extends StatelessWidget {
 }
 
 class _ProfileHeader extends StatelessWidget {
-  const _ProfileHeader({required this.user});
+  const _ProfileHeader({required this.userLogin});
 
-  final User user;
+  final String userLogin;
 
   @override
   Widget build(BuildContext context) {
@@ -103,44 +100,17 @@ class _ProfileHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          user.name,
+          userLogin,
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
             color: AppColors.bark,
           ),
         ),
-        Text('@${user.username}',
-            style: const TextStyle(color: AppColors.moss)),
-        if (user.location != null)
-          Text(
-            user.location!,
-            style: const TextStyle(color: AppColors.moss, fontSize: 12),
-          ),
-      ],
-    );
-  }
-}
-
-class _StatBlock extends StatelessWidget {
-  const _StatBlock({required this.label, required this.value});
-
-  final String label;
-  final int value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
         Text(
-          '$value',
-          style: const TextStyle(
-            fontWeight: FontWeight.w700,
-            color: AppColors.bark,
-          ),
+          '@$userLogin',
+          style: const TextStyle(color: AppColors.moss),
         ),
-        const SizedBox(width: 6),
-        Text(label, style: const TextStyle(color: AppColors.moss)),
       ],
     );
   }

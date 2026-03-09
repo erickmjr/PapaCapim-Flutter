@@ -16,9 +16,6 @@ class AppRoutes {
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final routeName = settings.name ?? login;
-    final usernameArg = settings.arguments is String
-        ? settings.arguments as String
-        : null;
 
     Widget page;
     switch (routeName) {
@@ -36,7 +33,7 @@ class AppRoutes {
         page = const NewPostScreen();
         break;
       case profile:
-        page = UserProfileScreen(username: usernameArg);
+        page = UserProfileScreen();
         break;
       case profileEdit:
         page = const EditProfileScreen();
