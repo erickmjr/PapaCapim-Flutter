@@ -4,14 +4,27 @@ import 'package:http/http.dart' as http;
 import '../core/config/app_config.dart';
 
 class ApiService {
-
-  static Future<http.Response> get(String endpoint) async {
-    final Uri url = Uri.parse("${AppConfig.baseUrl}$endpoint");
+  static Future<http.Response> get(
+    String endpoint, {
+    Map<String, String>? queryParameters,
+    String? sessionToken,
+  }) async {
+    final baseUrl = Uri.parse("${AppConfig.baseUrl}$endpoint");
+    final Uri url = queryParameters == null || queryParameters.isEmpty
+        ? baseUrl
+        : baseUrl.replace(
+            queryParameters: {
+              ...baseUrl.queryParameters,
+              ...queryParameters,
+            },
+          );
 
     return await http.get(
       url,
       headers: {
         "Content-Type": "application/json",
+        if (sessionToken != null && sessionToken.isNotEmpty)
+          "x-session-token": sessionToken,
       },
     );
   }
