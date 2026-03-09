@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:papa_capim/screens/feed.dart';
-import 'package:papa_capim/screens/login.dart';
+import 'package:papa_capim/routes.dart';
 import 'package:papa_capim/theme.dart';
 
 class PapaCapimApp extends StatelessWidget {
@@ -14,9 +13,8 @@ class PapaCapimApp extends StatelessWidget {
       title: 'Papa Capim',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.build(),
-      home: token != null
-          ? const FeedScreen()
-          : const LoginScreen(),
+      initialRoute: token != null ? AppRoutes.feed : AppRoutes.login,
+      onGenerateRoute: AppRoutes.onGenerateRoute,
     );
   }
 }
