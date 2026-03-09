@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:papa_capim/routes.dart';
+import 'package:papa_capim/screens/feed.dart';
+import 'package:papa_capim/screens/login.dart';
 import 'package:papa_capim/theme.dart';
 
 class PapaCapimApp extends StatelessWidget {
-  const PapaCapimApp({super.key});
+  final String? token;
+
+  const PapaCapimApp({super.key, this.token});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Papacapim',
+      title: 'Papa Capim',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.build(),
-      initialRoute: AppRoutes.login,
-      onGenerateRoute: AppRoutes.onGenerateRoute,
+      home: token != null
+          ? const FeedScreen()
+          : const LoginScreen(),
     );
   }
 }

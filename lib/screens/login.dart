@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:papa_capim/models/user_model.dart';
 import 'package:papa_capim/providers/user_provider.dart';
 import 'package:papa_capim/routes.dart';
+import 'package:papa_capim/screens/feed.dart';
 import 'package:papa_capim/services/secure_token.dart';
 import 'package:papa_capim/theme.dart';
 import 'package:provider/provider.dart' show ReadContext;
@@ -79,12 +80,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
         final user = UserModel.fromJson(data);
 
+        print(user.token);
+
         await SecureStorageService.saveToken(user.token);
 
         if (!mounted) return;
         context.read<UserProvider>().setUser(user);
         
-        Navigator.pushReplacementNamed(context, AppRoutes.feed);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const FeedScreen()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
