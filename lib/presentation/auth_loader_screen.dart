@@ -1,12 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:papa_capim/models/user_model.dart';
 import 'package:papa_capim/providers/user_provider.dart';
 import 'package:papa_capim/screens/feed.dart';
 import 'package:papa_capim/screens/login.dart';
-import 'package:papa_capim/services/api_services.dart';
 import 'package:papa_capim/services/secure_token.dart';
 import 'package:provider/provider.dart';
 
@@ -28,8 +23,6 @@ class _AuthLoaderScreenState extends State<AuthLoaderScreen> {
   Future<void> _checkAuth() async {
 
     final storedUser = await SecureStorageService.getUser();
-
-    print('Stored user: ${storedUser?.userLogin}, token: ${storedUser?.token}');
 
     if (storedUser == null) {
       _goLogin();
