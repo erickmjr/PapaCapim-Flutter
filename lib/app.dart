@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:papa_capim/presentation/auth_loader_screen.dart';
 import 'package:papa_capim/routes.dart';
 import 'package:papa_capim/theme.dart';
 
@@ -13,7 +14,7 @@ class PapaCapimApp extends StatelessWidget {
       title: 'Papa Capim',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.build(),
-      initialRoute: token != null ? AppRoutes.feed : AppRoutes.login,
+      home: const AuthLoaderScreen(),
       onGenerateRoute: AppRoutes.onGenerateRoute,
     );
   }

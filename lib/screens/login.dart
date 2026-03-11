@@ -18,46 +18,31 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late final TextEditingController _emailController;
+  late final TextEditingController _loginController;
   late final TextEditingController _passwordController;
 
   @override
   void initState() {
     super.initState();
-    _emailController = TextEditingController();
+    _loginController = TextEditingController();
     _passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _loginController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  bool _isValidEmail(String value) {
-    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
-    return emailRegex.hasMatch(value);
-  }
-
   Future<void> _validateAndLogin() async {
-    final email = _emailController.text.trim();
+    final login = _loginController.text.trim();
     final password = _passwordController.text;
 
-    if (email.isEmpty || password.isEmpty) {
+    if (login.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Por favor, preencha todos os campos'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    if (!_isValidEmail(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor, informe um e-mail válido'),
           backgroundColor: Colors.red,
         ),
       );
@@ -68,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final response = await ApiService.post(
         "/sessions",
         body: {
-          "login": email,
+          "login": login,
           "password": password,
         },
       );
@@ -80,9 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         final user = UserModel.fromJson(data);
 
-        print(user.token);
-
-        await SecureStorageService.saveToken(user.token);
+        await SecureStorageService.saveUser(user);
 
         if (!mounted) return;
         context.read<UserProvider>().setUser(user);
@@ -146,12 +129,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text('Email'),
+                  const Text('Login'),
                   const SizedBox(height: 6),
                   TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(hintText: 'seu@email.com'),
+                    controller: _loginController,
+                    keyboardType: TextInputType.name,
+                    decoration: const InputDecoration(hintText: 'Username'),
                   ),
                   const SizedBox(height: 12),
                   const Text('Senha'),

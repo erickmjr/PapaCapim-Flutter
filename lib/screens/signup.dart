@@ -11,7 +11,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  late final TextEditingController _emailController;
+  late final TextEditingController _loginController;
   late final TextEditingController _nameController;
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
@@ -19,7 +19,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   void initState() {
     super.initState();
-    _emailController = TextEditingController();
+    _loginController = TextEditingController();
     _nameController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
@@ -27,41 +27,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _loginController.dispose();
     _nameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  bool _isValidEmail(String value) {
-    final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
-    return emailRegex.hasMatch(value);
-  }
-
   void _validateAndCreateAccount() async {
-    final email = _emailController.text.trim();
+    final login = _loginController.text.trim();
     final name = _nameController.text.trim();
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    if (email.isEmpty ||
+    if (login.isEmpty ||
         name.isEmpty ||
         password.isEmpty ||
         confirmPassword.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Por favor, preencha todos os campos'),
-          backgroundColor: AppColors.danger,
-        ),
-      );
-      return;
-    }
-
-    if (!_isValidEmail(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor, informe um e-mail válido'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -83,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         "/users",
         body: {
           "user": {
-            "login": email,
+            "login": login,
             "name": name,
             "password": password,
             "password_confirmation": confirmPassword
@@ -151,10 +136,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 20),
                   _Field(
-                    controller: _emailController,
-                    label: 'Email:',
-                    hint: 'seu@email.com',
-                    keyboardType: TextInputType.emailAddress,
+                    controller: _loginController,
+                    label: 'Login:',
+                    hint: ';Username',
+                    keyboardType: TextInputType.name,
                   ),
                   const SizedBox(height: 12),
                   _Field(

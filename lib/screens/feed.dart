@@ -68,7 +68,7 @@ class _FeedScreenState extends State<FeedScreen> {
       }
 
       if (response.statusCode == 401) {
-        await SecureStorageService.deleteToken();
+        await SecureStorageService.clearUser();
         throw const _FeedAuthException();
       }
 
