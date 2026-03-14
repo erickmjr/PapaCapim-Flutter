@@ -28,9 +28,12 @@ class UserProfileScreen extends StatefulWidget {
   State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
+// lib/screens/user_profile_screen.dart
 class _UserProfileScreenState extends State<UserProfileScreen> {
   List<UserModel> _followers = [];
   bool _isLoadingFollowers = false;
+  bool _isFollowing = false;
+  bool _isFollowLoading = false; // NOVO: estado para loading do botão
 
   @override
   void initState() {
@@ -69,8 +72,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
+        final followers = UserModel.fromFollowersList(jsonList);
+        
         setState(() {
-          _followers = UserModel.fromFollowersList(jsonList);
+          _followers = followers;
+          _isFollowing = followers.any((follower) => 
+            follower.userLogin == userProvider.user?.userLogin
+          );
         });
       } else {
         throw Exception('Failed to load followers');
@@ -91,11 +99,125 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
+  Future<void> _followUser() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final currentUser = userProvider.user;
+    
+    if (currentUser?.token == null) return;
+
+    setState(() {
+      _isFollowing = true;
+      _isFollowLoading = true; // Ativa loading
+    });
+
+    try {
+      final response = await ApiService.follow(
+        widget.user!.userLogin,
+        currentUser!.token!,
+      );
+      
+      if (response != null && response.statusCode == 201) {
+        setState(() {
+          _followers.insert(0, UserModel(
+            userLogin: currentUser.userLogin,
+            userName: currentUser.userName,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ));
+          _isFollowLoading = false; // Desativa loading
+        });
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Você está seguindo @${widget.user!.userLogin}'),
+              backgroundColor: AppColors.leaf,
+            ),
+          );
+        }
+      } else {
+        setState(() {
+          _isFollowing = false;
+          _isFollowLoading = false; // Desativa loading
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isFollowing = false;
+        _isFollowLoading = false; // Desativa loading
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro ao seguir usuário'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _unfollowUser() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final currentUser = userProvider.user;
+    
+    if (currentUser?.token == null) return;
+
+    setState(() {
+      _isFollowing = false;
+      _isFollowLoading = true; // Ativa loading
+    });
+
+    try {
+      final response = await ApiService.unfollow(
+        widget.user!.userLogin,
+        currentUser!.token!,
+      );
+      
+      if (response != null && response.statusCode == 204) {
+        setState(() {
+          _followers.removeWhere((follower) => 
+            follower.userLogin == currentUser.userLogin
+          );
+          _isFollowLoading = false; // Desativa loading
+        });
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Você deixou de seguir @${widget.user!.userLogin}'),
+              backgroundColor: AppColors.sun,
+            ),
+          );
+        }
+      } else {
+        setState(() {
+          _isFollowing = true;
+          _isFollowLoading = false; // Desativa loading
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isFollowing = true;
+        _isFollowLoading = false; // Desativa loading
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro ao deixar de seguir'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
     
-    // Determina qual usuário exibir
     final displayUser = widget.user ?? userProvider.user;
     final currentUser = userProvider.user;
     
@@ -106,11 +228,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
 
     final bool isOwnProfile = currentUser?.userLogin == displayUser.userLogin;
-
     final avatarName = displayUser.userName.isNotEmpty ? displayUser.userName : displayUser.userLogin;
-    final userPosts = POSTS.where((post) => 
-      post.userId == displayUser.userId
-    ).toList();
+    final userPosts = POSTS.where((post) => post.userId == displayUser.userId).toList();
 
     return Scaffold(
       extendBody: true,
@@ -148,10 +267,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               if (!isOwnProfile) ...[
                 const SizedBox(width: 8),
                 _FollowButton(
-                  isFollowing: false, 
-                  onPressed: () {
-                    // TODO: Implementar ação de seguir/deixar de seguir
-                  },
+                  isFollowing: _isFollowing,
+                  isLoading: _isLoadingFollowers || _isFollowLoading, // Desabilitado enquanto carrega
+                  onPressed: (_isLoadingFollowers || _isFollowLoading) 
+                      ? null 
+                      : (_isFollowing ? _unfollowUser : _followUser),
                 ),
               ],
             ],
@@ -159,6 +279,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
           const SizedBox(height: 16),
 
+          // Seção de seguidores clicável
           GestureDetector(
             onTap: _followers.isNotEmpty ? () {
               Navigator.push(
@@ -211,9 +332,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ),
                       const SizedBox(width: 4),
                       Icon(
-                        _followers.isNotEmpty 
-                            ? Icons.chevron_right_rounded
-                            : Icons.chevron_right_rounded,
+                        Icons.chevron_right_rounded,
                         color: _followers.isNotEmpty 
                             ? AppColors.moss 
                             : AppColors.moss.withOpacity(0.3),
@@ -259,6 +378,48 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 }
 
+class _FollowButton extends StatelessWidget {
+  final bool isFollowing;
+  final bool isLoading;
+  final VoidCallback? onPressed;
+
+  const _FollowButton({
+    required this.isFollowing,
+    required this.isLoading,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: isLoading ? null : onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isFollowing ? AppColors.cream : AppColors.forest,
+        foregroundColor: isFollowing ? AppColors.forest : AppColors.cream,
+        side: BorderSide(
+          color: isFollowing ? AppColors.forest : Colors.transparent,
+        ),
+        minimumSize: const Size(80, 36),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+      child: isLoading
+          ? SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  isFollowing ? AppColors.forest : AppColors.cream,
+                ),
+              ),
+            )
+          : Text(isFollowing ? 'Seguindo' : 'Seguir'),
+    );
+  }
+}
+
 class _ProfileHeader extends StatelessWidget {
   final String userLogin;
 
@@ -280,35 +441,6 @@ class _ProfileHeader extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _FollowButton extends StatelessWidget {
-  final bool isFollowing;
-  final VoidCallback onPressed;
-
-  const _FollowButton({
-    required this.isFollowing,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isFollowing ? AppColors.cream : AppColors.forest,
-        foregroundColor: isFollowing ? AppColors.forest : AppColors.cream,
-        side: BorderSide(
-          color: isFollowing ? AppColors.forest : Colors.transparent,
-        ),
-        minimumSize: const Size(80, 36),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-      child: Text(isFollowing ? 'Seguindo' : 'Seguir'),
     );
   }
 }

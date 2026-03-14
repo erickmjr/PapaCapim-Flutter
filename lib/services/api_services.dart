@@ -43,4 +43,54 @@ class ApiService {
       body: body != null ? jsonEncode(body) : null,
     );
   }
+
+  static Future<http.Response?> follow(
+    String userLogin,
+    String sessionToken,
+  ) async {
+    final Uri url = Uri.parse("${AppConfig.baseUrl}/users/$userLogin/followers");
+
+    try {      
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "x-session-token": sessionToken,
+        },
+      );
+
+      if (response.statusCode == 201) {
+        return response;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+static Future<http.Response?> unfollow(
+    String userLogin,
+    String sessionToken,
+  ) async {
+    final Uri url = Uri.parse("${AppConfig.baseUrl}/users/$userLogin/followers/1"); 
+    try {
+      final response = await http.delete(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "x-session-token": sessionToken,
+        },
+      );
+
+      if (response.statusCode == 204) {
+        return response;
+      }
+
+      return null;
+    } catch (e) {
+        return null;
+    }
+  }
+
 }
