@@ -3,6 +3,9 @@ import 'package:papa_capim/presentation/auth_loader_screen.dart';
 import 'package:papa_capim/routes.dart';
 import 'package:papa_capim/theme.dart';
 
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();
+
 class PapaCapimApp extends StatelessWidget {
   final String? token;
 
@@ -16,6 +19,7 @@ class PapaCapimApp extends StatelessWidget {
       theme: AppTheme.build(),
       home: const AuthLoaderScreen(),
       onGenerateRoute: AppRoutes.onGenerateRoute,
+      navigatorObservers: [routeObserver],
     );
   }
 }

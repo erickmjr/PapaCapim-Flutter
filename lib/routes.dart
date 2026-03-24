@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:papa_capim/models/post_model.dart';
 import 'package:papa_capim/screens/edit_profile.dart';
 import 'package:papa_capim/screens/feed.dart';
 import 'package:papa_capim/screens/login.dart';
 import 'package:papa_capim/screens/post.dart';
 import 'package:papa_capim/screens/profile.dart';
+import 'package:papa_capim/screens/search_posts.dart';
+import 'package:papa_capim/screens/search_users.dart';
 import 'package:papa_capim/screens/signup.dart';
 
 class AppRoutes {
@@ -13,9 +16,12 @@ class AppRoutes {
   static const newPost = '/new-post';
   static const profile = '/profile';
   static const profileEdit = '/profile/edit';
+  static const searchUsers = '/search/users';
+  static const searchPosts = '/search/posts';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final routeName = settings.name ?? login;
+    final args = settings.arguments;
 
     Widget page;
     switch (routeName) {
@@ -30,13 +36,23 @@ class AppRoutes {
         page = const FeedScreen();
         break;
       case newPost:
-        page = const NewPostScreen();
+        page = NewPostScreen(
+          replyToPost: args is PostModel ? args : null,
+        );
         break;
       case profile:
-        page = UserProfileScreen();
+        page = UserProfileScreen(
+          userLogin: args is String ? args : null,
+        );
         break;
       case profileEdit:
         page = const EditProfileScreen();
+        break;
+      case searchUsers:
+        page = const SearchUsersScreen();
+        break;
+      case searchPosts:
+        page = const SearchPostsScreen();
         break;
       default:
         page = const LoginScreen();
