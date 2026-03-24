@@ -91,7 +91,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         currentUser.userLogin.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Usuario nao carregado'),
+          content: Text('Usu\u00E1rio n\u00E3o carregado'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -101,7 +101,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (login.isEmpty || name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Login e nome sao obrigatorios'),
+          content: Text('Login e nome s\u00E3o obrigat\u00F3rios'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -111,7 +111,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (password.isNotEmpty && password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('As senhas nao coincidem'),
+          content: Text('As senhas n\u00E3o coincidem'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -124,7 +124,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (editableUser == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Usuario nao carregado'),
+          content: Text('Usu\u00E1rio n\u00E3o carregado'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -196,7 +196,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Nao foi possivel atualizar o perfil'),
+          content: Text('N\u00E3o foi poss\u00EDvel atualizar o perfil'),
           backgroundColor: AppColors.danger,
         ),
       );

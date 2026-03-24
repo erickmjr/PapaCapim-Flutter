@@ -72,7 +72,7 @@ class _SearchUsersScreenState extends State<SearchUsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Buscar usuarios'),
+        title: const Text('Buscar usuários'),
         backgroundColor: AppColors.forest,
         foregroundColor: AppColors.cream,
       ),
@@ -105,7 +105,7 @@ class _SearchUsersScreenState extends State<SearchUsersScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _users.isEmpty
-                    ? const Center(child: Text('Nenhum usuario encontrado'))
+                    ? const Center(child: Text('Nenhum usuário encontrado'))
                     : ListView.builder(
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                         itemCount: _users.length,

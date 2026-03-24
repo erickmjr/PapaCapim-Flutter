@@ -62,7 +62,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Nao foi possivel publicar agora'),
+          content: Text('N\u00E3o foi poss\u00EDvel publicar agora'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -78,7 +78,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
     final user = context.watch<UserProvider>().user;
     final displayName = user?.userName.isNotEmpty == true
         ? user!.userName
-        : (user?.userLogin ?? 'Usuario');
+        : (user?.userLogin ?? 'Usu\u00E1rio');
     final title = widget.replyToPost == null ? 'Nova postagem' : 'Responder';
 
     return Scaffold(
@@ -129,7 +129,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                     maxLength: _maxChars,
                     maxLines: null,
                     decoration: const InputDecoration(
-                      hintText: 'O que esta acontecendo?',
+                      hintText: 'O que est\u00E1 acontecendo?',
                       border: InputBorder.none,
                     ),
                   ),

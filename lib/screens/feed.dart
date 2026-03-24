@@ -99,8 +99,8 @@ class _FeedScreenState extends State<FeedScreen> with RouteAware {
         _posts = const [];
         _isLoading = false;
         _errorMessage = e is _FeedAuthException
-            ? 'Sessao expirada. Faca login novamente.'
-            : 'Nao foi possivel carregar o feed.';
+            ? 'Sess\u00E3o expirada. Fa\u00E7a login novamente.'
+            : 'N\u00E3o foi poss\u00EDvel carregar o feed.';
       });
     }
   }
@@ -168,7 +168,7 @@ class _FeedScreenState extends State<FeedScreen> with RouteAware {
               children: [
                 const SizedBox(height: 160),
                 Text(
-                  'Nenhuma publicacao no seu feed por enquanto.',
+                  'Nenhuma publica\u00E7\u00E3o no seu feed por enquanto.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: AppColors.moss.withValues(alpha: 0.8)),
                 ),
@@ -191,7 +191,7 @@ class _FeedScreenState extends State<FeedScreen> with RouteAware {
                 Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 120),
                   child: Text(
-                    'Isso e tudo por enquanto',
+                    'Isso \u00E9 tudo por enquanto',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: AppColors.moss.withValues(alpha: 0.6)),
                   ),
@@ -216,7 +216,7 @@ class _FeedScreenState extends State<FeedScreen> with RouteAware {
         elevation: 0,
         actions: [
           IconButton(
-            tooltip: 'Buscar usuarios',
+            tooltip: 'Buscar usu\u00E1rios',
             onPressed: () => _openScreen(const SearchUsersScreen()),
             icon: const Icon(Icons.person_search_outlined),
           ),

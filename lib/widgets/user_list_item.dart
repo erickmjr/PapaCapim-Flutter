@@ -21,10 +21,10 @@ class UserListItem extends StatelessWidget {
     final cleanedLogin = user.userLogin.trim();
     final avatarName = cleanedName.isNotEmpty
         ? cleanedName
-        : (cleanedLogin.isNotEmpty ? cleanedLogin : 'Usuario');
+        : (cleanedLogin.isNotEmpty ? cleanedLogin : 'Usu\u00E1rio');
     final displayName = cleanedName.isNotEmpty
         ? cleanedName
-        : (cleanedLogin.isNotEmpty ? cleanedLogin : 'Usuario');
+        : (cleanedLogin.isNotEmpty ? cleanedLogin : 'Usu\u00E1rio');
     final displayLogin = cleanedLogin.isNotEmpty ? cleanedLogin : 'indisponivel';
 
     return Material(

@@ -166,7 +166,7 @@ class _ApiPostCardState extends State<ApiPostCard> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Nao foi possivel atualizar a curtida'),
+          content: Text('Não foi possível atualizar a curtida'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -210,7 +210,7 @@ class _ApiPostCardState extends State<ApiPostCard> {
       if (response.statusCode == 204) {
         widget.onDeleted?.call();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Postagem excluida')),
+          const SnackBar(content: Text('Postagem excluída')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -221,7 +221,7 @@ class _ApiPostCardState extends State<ApiPostCard> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Nao foi possivel excluir a postagem'),
+          content: Text('Não foi possível excluir a postagem'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -244,7 +244,7 @@ class _ApiPostCardState extends State<ApiPostCard> {
     final avatarText = cleanedLogin.isEmpty
         ? '?'
         : cleanedLogin.characters.first.toUpperCase();
-    final displayLogin = cleanedLogin.isEmpty ? 'usuario' : cleanedLogin;
+    final displayLogin = cleanedLogin.isEmpty ? 'usuário' : cleanedLogin;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
