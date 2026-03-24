@@ -113,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               decoration: BoxDecoration(
                 color: AppColors.card,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.leaf.withOpacity(0.1)),
+                border: Border.all(color: AppColors.leaf.withValues(alpha: 0.1)),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -138,7 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   _Field(
                     controller: _loginController,
                     label: 'Login:',
-                    hint: ';Username',
+                    hint: 'Username',
                     keyboardType: TextInputType.name,
                   ),
                   const SizedBox(height: 12),
@@ -189,7 +189,6 @@ class _Field extends StatelessWidget {
     required this.hint,
     this.keyboardType,
     this.obscureText = false,
-    this.maxLines = 1,
   });
 
   final TextEditingController controller;
@@ -197,7 +196,6 @@ class _Field extends StatelessWidget {
   final String hint;
   final TextInputType? keyboardType;
   final bool obscureText;
-  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -216,7 +214,6 @@ class _Field extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
-          maxLines: maxLines,
           decoration: InputDecoration(hintText: hint),
         ),
       ],

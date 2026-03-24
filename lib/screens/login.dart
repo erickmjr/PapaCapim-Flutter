@@ -8,6 +8,7 @@ import 'package:papa_capim/screens/feed.dart';
 import 'package:papa_capim/services/secure_token.dart';
 import 'package:papa_capim/theme.dart';
 import 'package:provider/provider.dart' show ReadContext;
+
 import '../services/api_services.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _loginController;
   late final TextEditingController _passwordController;
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -49,48 +51,80 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    setState(() => _isSubmitting = true);
+
     try {
-      final response = await ApiService.post(
-        "/sessions",
+      final sessionResponse = await ApiService.post(
+        '/sessions',
         body: {
-          "login": login,
-          "password": password,
+          'login': login,
+          'password': password,
         },
       );
 
-      if (!mounted) return; 
-      if (response.statusCode == 200) {
+      if (!mounted) return;
 
-        final data = jsonDecode(response.body);
-
-        final user = UserModel.fromJson(data);
-
-        await SecureStorageService.saveUser(user);
-
-        if (!mounted) return;
-        context.read<UserProvider>().setUser(user);
-        
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const FeedScreen()),
-        );
-      } else {
+      if (sessionResponse.statusCode != 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Verifique suas credenciais e tente novamente'),
             backgroundColor: AppColors.danger,
           ),
         );
+        return;
       }
-    } catch (e) {
+
+      final session = UserModel.fromSessionJson(
+        jsonDecode(sessionResponse.body) as Map<String, dynamic>,
+      );
+
+      final userResponse = await ApiService.getUser(
+        session.userLogin,
+        session.token ?? '',
+      );
+
+      if (!mounted) return;
+
+      if (userResponse.statusCode != 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Sessao criada, mas nao foi possivel carregar o usuario'),
+            backgroundColor: AppColors.danger,
+          ),
+        );
+        return;
+      }
+
+      final user = UserModel.fromUserJson(
+        jsonDecode(userResponse.body) as Map<String, dynamic>,
+      ).copyWith(
+        sessionId: session.sessionId,
+        token: session.token,
+        ip: session.ip,
+      );
+
+      await SecureStorageService.saveUser(user);
+
+      if (!mounted) return;
+      context.read<UserProvider>().setUser(user);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const FeedScreen()),
+      );
+    } catch (_) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Erro de conexão'),
+          content: Text('Erro de conexao'),
           backgroundColor: AppColors.danger,
         ),
       );
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
     }
   }
 
@@ -107,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
               decoration: BoxDecoration(
                 color: AppColors.card,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.leaf.withOpacity(0.1)),
+                border: Border.all(color: AppColors.leaf.withValues(alpha: 0.1)),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -143,11 +177,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(hintText: '********'),
+                    onSubmitted: (_) => _isSubmitting ? null : _validateAndLogin(),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: _validateAndLogin,
-                    child: const Text('Entrar'),
+                    onPressed: _isSubmitting ? null : _validateAndLogin,
+                    child: Text(_isSubmitting ? 'Entrando...' : 'Entrar'),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
