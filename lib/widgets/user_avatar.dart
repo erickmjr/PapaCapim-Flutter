@@ -48,9 +48,21 @@ class UserAvatar extends StatelessWidget {
   }
 
   String get _initials {
-    final parts = name.trim().split(RegExp(r'\s+'));
-    if (parts.isEmpty) return '';
-    return parts.take(2).map((p) => p[0]).join().toUpperCase();
+    final cleaned = name.trim();
+    if (cleaned.isEmpty) return '?';
+
+    final parts = cleaned
+        .split(RegExp(r'\s+'))
+        .where((part) => part.isNotEmpty)
+        .toList();
+
+    if (parts.isEmpty) return '?';
+
+    return parts
+        .take(2)
+        .map((part) => part.characters.first)
+        .join()
+        .toUpperCase();
   }
 
   @override
@@ -66,7 +78,7 @@ class UserAvatar extends StatelessWidget {
             : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
