@@ -63,13 +63,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return null;
     }
 
-    final refreshedUser = UserModel.fromUserJson(
-      jsonDecode(response.body) as Map<String, dynamic>,
-    ).copyWith(
-      sessionId: currentUser.sessionId,
-      token: currentUser.token,
-      ip: currentUser.ip,
-    );
+    final refreshedUser =
+        UserModel.fromUserJson(
+          jsonDecode(response.body) as Map<String, dynamic>,
+        ).copyWith(
+          sessionId: currentUser.sessionId,
+          token: currentUser.token,
+          ip: currentUser.ip,
+        );
 
     await SecureStorageService.saveUser(refreshedUser);
     if (!mounted) return null;
@@ -91,7 +92,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         currentUser.userLogin.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Usu\u00E1rio n\u00E3o carregado'),
+          content: Text('Usuário não carregado'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -101,7 +102,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (login.isEmpty || name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Login e nome s\u00E3o obrigat\u00F3rios'),
+          content: Text('Login e nome são obrigatários'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -111,7 +112,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (password.isNotEmpty && password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('As senhas n\u00E3o coincidem'),
+          content: Text('As senhas não coincidem'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -124,7 +125,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (editableUser == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Usu\u00E1rio n\u00E3o carregado'),
+          content: Text('Usuário não carregado'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -196,7 +197,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('N\u00E3o foi poss\u00EDvel atualizar o perfil'),
+          content: Text('Não foi possível atualizar o perfil'),
           backgroundColor: AppColors.danger,
         ),
       );

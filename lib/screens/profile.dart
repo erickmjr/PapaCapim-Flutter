@@ -18,11 +18,7 @@ import 'package:papa_capim/widgets/user_avatar.dart';
 import 'package:provider/provider.dart';
 
 class UserProfileScreen extends StatefulWidget {
-  const UserProfileScreen({
-    super.key,
-    this.user,
-    this.userLogin,
-  });
+  const UserProfileScreen({super.key, this.user, this.userLogin});
 
   final UserModel? user;
   final String? userLogin;
@@ -134,7 +130,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
     if (token == null || token.isEmpty || login.isEmpty) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'N\u00E3o foi poss\u00EDvel carregar o perfil.';
+        _errorMessage = 'Não foi possível carregar o perfil.';
       });
       return;
     }
@@ -156,16 +152,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
       final postsResponse = responses[2] as dynamic;
 
       if (userResponse.statusCode != 200) {
-        throw Exception('Erro ao carregar usu\u00E1rio');
+        throw Exception('Erro ao carregar usuário');
       }
 
-      final user = UserModel.fromUserJson(
-        jsonDecode(userResponse.body) as Map<String, dynamic>,
-      ).copyWith(
-        token: currentUser?.token,
-        sessionId: currentUser?.sessionId,
-        ip: currentUser?.ip,
-      );
+      final user =
+          UserModel.fromUserJson(
+            jsonDecode(userResponse.body) as Map<String, dynamic>,
+          ).copyWith(
+            token: currentUser?.token,
+            sessionId: currentUser?.sessionId,
+            ip: currentUser?.ip,
+          );
       _ProfileCache.storeUser(user);
 
       final usersByLogin = {
@@ -201,7 +198,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
       if (!mounted || requestId != _profileLoadRequestId) return;
       setState(() {
         _isLoading = false;
-        _errorMessage = 'N\u00E3o foi poss\u00EDvel carregar o perfil.';
+        _errorMessage = 'Não foi possível carregar o perfil.';
       });
     }
   }
@@ -226,7 +223,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Voc\u00EA est\u00E1 seguindo @${viewedUser.userLogin}'),
+            content: Text('Você está seguindo @${viewedUser.userLogin}'),
           ),
         );
       } else {
@@ -238,7 +235,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('N\u00E3o foi poss\u00EDvel seguir este usu\u00E1rio'),
+          content: Text('Não foi possível seguir este usuário'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -272,21 +269,21 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              'Voc\u00EA deixou de seguir @${viewedUser.userLogin}',
-            ),
+            content: Text('Você deixou de seguir @${viewedUser.userLogin}'),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao deixar de seguir: ${response.statusCode}')),
+          SnackBar(
+            content: Text('Erro ao deixar de seguir: ${response.statusCode}'),
+          ),
         );
       }
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('N\u00E3o foi poss\u00EDvel deixar de seguir'),
+          content: Text('Não foi possível deixar de seguir'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -300,9 +297,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
   Future<void> _openReply(PostModel post) async {
     final created = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (_) => NewPostScreen(replyToPost: post),
-      ),
+      MaterialPageRoute(builder: (_) => NewPostScreen(replyToPost: post)),
     );
 
     if (created == true && mounted) {
@@ -315,9 +310,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
     if (updated == true && mounted) {
       await _loadProfile();
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Perfil atualizado')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Perfil atualizado')));
     }
   }
 
@@ -332,7 +327,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
     }
 
     final confirmationController = TextEditingController();
-    final confirmed = await showDialog<bool>(
+    final confirmed =
+        await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Excluir conta'),
@@ -341,7 +337,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Digite "Excluir minha conta" para confirmar a opera\u00E7\u00E3o.',
+                  'Digite "Excluir minha conta" para confirmar a operação.',
                 ),
                 const SizedBox(height: 12),
                 TextField(
@@ -395,14 +391,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao excluir conta: ${response.statusCode}')),
+          SnackBar(
+            content: Text('Erro ao excluir conta: ${response.statusCode}'),
+          ),
         );
       }
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('N\u00E3o foi poss\u00EDvel excluir a conta'),
+          content: Text('Não foi possível excluir a conta'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -420,9 +418,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
         child: Text(
           emptyMessage,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: AppColors.moss.withValues(alpha: 0.7),
-          ),
+          style: TextStyle(color: AppColors.moss.withValues(alpha: 0.7)),
         ),
       );
     }
@@ -477,10 +473,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
             ],
           ),
           const SizedBox(height: 12),
-          _buildUsersList(
-            _followers,
-            'Nenhum seguidor ainda',
-          ),
+          _buildUsersList(_followers, 'Nenhum seguidor ainda'),
         ],
       ),
     );
@@ -491,17 +484,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
     final currentUser = context.watch<UserProvider>().user;
     final currentUserLogin = currentUser?.userLogin ?? '';
     final displayUser = _displayUser ?? widget.user;
-    final isOwnProfile = displayUser != null &&
+    final isOwnProfile =
+        displayUser != null &&
         currentUser != null &&
         currentUser.userLogin == displayUser.userLogin;
-    final isFollowing = !isOwnProfile &&
+    final isFollowing =
+        !isOwnProfile &&
         currentUser != null &&
-        _followers.any((follower) => follower.userLogin == currentUser.userLogin);
+        _followers.any(
+          (follower) => follower.userLogin == currentUser.userLogin,
+        );
 
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_errorMessage != null || displayUser == null) {
@@ -614,13 +609,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> with RouteAware {
             const Divider(),
             const SizedBox(height: 8),
             const Text(
-              'Publica\u00E7\u00F5es',
+              'Publicações',
               style: TextStyle(fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 12),
             if (_posts.isEmpty)
               Text(
-                'Nenhuma publica\u00E7\u00E3o ainda.',
+                'Nenhuma publicação ainda.',
                 style: TextStyle(color: AppColors.moss.withValues(alpha: 0.7)),
               )
             else
@@ -656,9 +651,7 @@ class _ProfileCache {
 }
 
 class _ConnectionTile extends StatelessWidget {
-  const _ConnectionTile({
-    required this.user,
-  });
+  const _ConnectionTile({required this.user});
 
   final UserModel user;
 

@@ -7,10 +7,7 @@ import 'package:papa_capim/widgets/user_avatar.dart';
 import 'package:provider/provider.dart';
 
 class NewPostScreen extends StatefulWidget {
-  const NewPostScreen({
-    super.key,
-    this.replyToPost,
-  });
+  const NewPostScreen({super.key, this.replyToPost});
 
   final PostModel? replyToPost;
 
@@ -62,7 +59,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('N\u00E3o foi poss\u00EDvel publicar agora'),
+          content: Text('Não foi possível publicar agora'),
           backgroundColor: AppColors.danger,
         ),
       );
@@ -78,7 +75,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
     final user = context.watch<UserProvider>().user;
     final displayName = user?.userName.isNotEmpty == true
         ? user!.userName
-        : (user?.userLogin ?? 'Usu\u00E1rio');
+        : (user?.userLogin ?? 'Usuário');
     final title = widget.replyToPost == null ? 'Nova postagem' : 'Responder';
 
     return Scaffold(
@@ -129,7 +126,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                     maxLength: _maxChars,
                     maxLines: null,
                     decoration: const InputDecoration(
-                      hintText: 'O que est\u00E1 acontecendo?',
+                      hintText: 'O que está acontecendo?',
                       border: InputBorder.none,
                     ),
                   ),

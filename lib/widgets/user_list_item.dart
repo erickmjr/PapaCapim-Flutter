@@ -21,11 +21,13 @@ class UserListItem extends StatelessWidget {
     final cleanedLogin = user.userLogin.trim();
     final avatarName = cleanedName.isNotEmpty
         ? cleanedName
-        : (cleanedLogin.isNotEmpty ? cleanedLogin : 'Usu\u00E1rio');
+        : (cleanedLogin.isNotEmpty ? cleanedLogin : 'Usuário');
     final displayName = cleanedName.isNotEmpty
         ? cleanedName
-        : (cleanedLogin.isNotEmpty ? cleanedLogin : 'Usu\u00E1rio');
-    final displayLogin = cleanedLogin.isNotEmpty ? cleanedLogin : 'indisponivel';
+        : (cleanedLogin.isNotEmpty ? cleanedLogin : 'Usuário');
+    final displayLogin = cleanedLogin.isNotEmpty
+        ? cleanedLogin
+        : 'indisponivel';
 
     return Material(
       color: Colors.transparent,
@@ -67,10 +69,7 @@ class UserListItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: AppColors.moss,
-              ),
+              const Icon(Icons.chevron_right_rounded, color: AppColors.moss),
             ],
           ),
         ),

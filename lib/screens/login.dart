@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'Sess\u00E3o criada, mas n\u00E3o foi poss\u00EDvel carregar o usu\u00E1rio',
+              'Sessão criada, mas não foi possível carregar o usuário',
             ),
             backgroundColor: AppColors.danger,
           ),
@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Erro de conex\u00E3o'),
+          content: Text('Erro de conexão'),
           backgroundColor: AppColors.danger,
         ),
       );
